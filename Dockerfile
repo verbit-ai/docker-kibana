@@ -1,7 +1,7 @@
-FROM alpine:3.6
+FROM alpine:3.8
 
-ENV KIBANA_VERSION 6.2.2
-ENV SG_VERSION 6.2.2-10
+ENV KIBANA_VERSION 6.5.4
+ENV SG_VERSION 6.5.4-17
 
 RUN apk --update add bash curl wget && \
     mkdir /opt && \
@@ -23,12 +23,12 @@ RUN rm -f "/opt/kibana-$KIBANA_VERSION/config/kibana.yml"
 
 ADD ./src/ /run/
 RUN chmod +x -R /run/
-
+ADD root.pem /
 ENV KIBANA_PWD="changeme" \ 
     ELASTICSEARCH_HOST="0-0-0-0" \ 
     ELASTICSEARCH_PORT="9200" \ 
-	KIBANA_HOST="0.0.0.0" \
-	ELASTICSEARCH_PROTOCOL="https"
+    KIBANA_HOST="0.0.0.0" \
+    ELASTICSEARCH_PROTOCOL="https"
 		
 EXPOSE 5601
 
