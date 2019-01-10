@@ -11,6 +11,7 @@ RUN apk --update add bash curl wget && \
     mkdir -p /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin && \
     ln -sf /usr/bin/node /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin/node && \
 		/opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana-plugin install "https://oss.sonatype.org/content/repositories/releases/com/floragunn/search-guard-kibana-plugin/$SG_VERSION/search-guard-kibana-plugin-$SG_VERSION.zip" && \
+		/opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana-plugin install "https://github.com/sivasamyk/logtrail/releases/download/v0.1.30/logtrail-6.5.4-0.1.30.zip" && \
     rm -rf /var/cache/apk/*
 
 ENV PATH /opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin:$PATH
