@@ -1,20 +1,21 @@
-FROM alpine:3.8
+FROM ubuntu:latest
 
-ENV KIBANA_VERSION 6.5.4
-ENV SG_VERSION 6.5.4-17
+ENV KIBANA_VERSION 6.8.1
+ENV SG_VERSION 6.8.1-18.4
+ENV NODE_VERSION v10.15.2
+ENV NODE_PLATFORM=linux-x64
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apk --update add bash curl wget && \
-    mkdir /opt && \
-    curl -s https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz | tar zx -C /opt && \
-    apk add nodejs && \
-    rm -rf /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node && \
-    mkdir -p /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin && \
-    ln -sf /usr/bin/node /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin/node && \
-		/opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana-plugin install "https://oss.sonatype.org/content/repositories/releases/com/floragunn/search-guard-kibana-plugin/$SG_VERSION/search-guard-kibana-plugin-$SG_VERSION.zip" && \
-		/opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana-plugin install "https://github.com/sivasamyk/logtrail/releases/download/v0.1.30/logtrail-6.5.4-0.1.30.zip" && \
-    rm -rf /var/cache/apk/*
+ENV PATH /opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin:/usr/local/lib/nodejs/node-${NODE_VERSION}-${NODE_PLATFORM}/bin:$PATH
 
-ENV PATH /opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin:$PATH
+RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#g' /etc/apt/sources.list && \
+    apt-get -qy update; apt-get install -qy bash curl wget && \
+    mkdir -p /opt /usr/local/lib/nodejs && \
+    curl -s https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${NODE_PLATFORM}.tar.gz | tar zx -C /usr/local/lib/nodejs
+
+RUN curl -s https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz | tar zx -C /opt && \
+		/opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana-plugin install "https://oss.sonatype.org/content/repositories/releases/com/floragunn/search-guard-kibana-plugin/$SG_VERSION/search-guard-kibana-plugin-$SG_VERSION.zip"
+
 
 RUN mkdir -p /.backup/kibana
 COPY config /.backup/kibana/config
