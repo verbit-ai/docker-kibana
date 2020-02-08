@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:18.04
 
 ENV KIBANA_VERSION 6.8.1
 ENV SG_VERSION 6.8.1-18.4
