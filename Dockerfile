@@ -23,9 +23,10 @@ COPY config /.backup/kibana/config
 ADD ./src/ /run/
 RUN chmod +x -R /run/
 ADD root.pem /
-ENV KIBANA_PWD="changeme" \ 
-    ELASTICSEARCH_HOST="0-0-0-0" \ 
-    ELASTICSEARCH_PORT="9200" \ 
+ENV KIBANA_PWD="changeme" \
+    ELASTICSEARCH_HOST="0-0-0-0" \
+    ELASTICSEARCH_PORT="9200" \
+    ELASTICSEARCH_TIMEOUT="600000" \
     KIBANA_HOST="0.0.0.0" \
     ELASTICSEARCH_PROTOCOL="https"
 		
